@@ -57,6 +57,7 @@ Public Class Form1
 
     End Sub
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Timer1.Enabled = True
         'change_menu("home")
         'Dim timer As New Timer()
         'timer.Interval = 2000 ' 5000 milliseconds (5 seconds)
@@ -201,12 +202,12 @@ Public Class Form1
         OpenChildForm(New Analysisform)
     End Sub
 
-    Private Sub Guna2Button2_Click_1(sender As Object, e As EventArgs) Handles Guna2Button2.Click
+    Private Sub Guna2Button2_Click_1(sender As Object, e As EventArgs)
         OpenChildForm(New overview)
     End Sub
 
     Private Sub Label2_Click(sender As Object, e As EventArgs) Handles datetime.Click
-        Timer1.Enabled = True
+
     End Sub
 
 
@@ -217,4 +218,5 @@ Public Class Form1
     Private Sub Timer1_Tick_1(sender As Object, e As EventArgs) Handles Timer1.Tick
         datetime.Text = Date.Now.ToString("dd-MMM-yyyy   hh:mm:ss")
     End Sub
+
 End Class

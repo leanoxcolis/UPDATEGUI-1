@@ -30,7 +30,6 @@ Partial Class Form1
         Me.exitbtn = New System.Windows.Forms.Button()
         Me.minimizebtn = New System.Windows.Forms.Button()
         Me.sidepanel = New System.Windows.Forms.Panel()
-        Me.Guna2Button2 = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2Button1 = New Guna.UI2.WinForms.Guna2Button()
         Me.logoBtn = New System.Windows.Forms.Button()
         Me.dashboardbtn = New Guna.UI2.WinForms.Guna2Button()
@@ -120,7 +119,6 @@ Partial Class Form1
         'sidepanel
         '
         Me.sidepanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(57, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.sidepanel.Controls.Add(Me.Guna2Button2)
         Me.sidepanel.Controls.Add(Me.Guna2Button1)
         Me.sidepanel.Controls.Add(Me.logoBtn)
         Me.sidepanel.Controls.Add(Me.dashboardbtn)
@@ -130,26 +128,6 @@ Partial Class Form1
         Me.sidepanel.Name = "sidepanel"
         Me.sidepanel.Size = New System.Drawing.Size(320, 784)
         Me.sidepanel.TabIndex = 2
-        '
-        'Guna2Button2
-        '
-        Me.Guna2Button2.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2Button2.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.Guna2Button2.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.Guna2Button2.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.Guna2Button2.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.Guna2Button2.FillColor = System.Drawing.Color.Transparent
-        Me.Guna2Button2.Font = New System.Drawing.Font("Century Gothic", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2Button2.ForeColor = System.Drawing.SystemColors.Window
-        Me.Guna2Button2.Image = CType(resources.GetObject("Guna2Button2.Image"), System.Drawing.Image)
-        Me.Guna2Button2.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.Guna2Button2.ImageSize = New System.Drawing.Size(30, 30)
-        Me.Guna2Button2.Location = New System.Drawing.Point(4, 483)
-        Me.Guna2Button2.Margin = New System.Windows.Forms.Padding(4)
-        Me.Guna2Button2.Name = "Guna2Button2"
-        Me.Guna2Button2.Size = New System.Drawing.Size(316, 69)
-        Me.Guna2Button2.TabIndex = 3
-        Me.Guna2Button2.Text = "Settings"
         '
         'Guna2Button1
         '
@@ -279,7 +257,6 @@ Partial Class Form1
     Friend WithEvents paneldashboard As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents MaximizeBTN As Button
     Friend WithEvents Label1 As Label
-    Friend WithEvents Guna2Button2 As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2Button1 As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents datetime As Label
     Friend WithEvents SolidGauge1 As LiveCharts.WinForms.SolidGauge

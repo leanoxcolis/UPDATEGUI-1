@@ -10,128 +10,74 @@ Public Class Analysisform
     'Dim connectionString As String = "server=127.0.0.1;userid=root;password='';database=ultrasonic_data"
     'Dim connection As MySqlConnection
     'Dim Connector As New Connector()
-
-    Public Sub Cart()
+    Private selectedItem As String = ""
+    Public Sub Cart(tableName As String)
         ' Call the Connect method to establish a database connection
         Connector.Connect()
 
-        ' SQL queries to retrieve data from the database
-        Dim query1 As String = "SELECT datetime, milliLiter FROM ultrasonic_data"
-        Dim query2 As String = "SELECT datetime, milliLiter FROM ultrasonic_data1"
-        Dim query3 As String = "SELECT datetime, milliLiter FROM ultrasonic_data2"
+        ' SQL query to retrieve data from the database
+        Dim query As String = $"SELECT datetime, milliLiter FROM {tableName}"
 
-        ' Create lists to store the data from each table
-        Dim datetimes1 As New List(Of DateTime)()
-        Dim milliLiters1 As New List(Of Double)()
-
-        Dim datetimes2 As New List(Of DateTime)()
-        Dim milliLiters2 As New List(Of Double)()
-
-        Dim datetimes3 As New List(Of DateTime)()
-        Dim milliLiters3 As New List(Of Double)()
-
-        ' Execute the first query using the existing connection
-        Connector.command.Connection = Connector.conn
-        Connector.command.CommandText = query1
+        ' Create lists to store the data
+        Dim datetimes As New List(Of DateTime)()
+        Dim milliLiters As New List(Of Double)()
 
         Try
+            ' Execute the query using the existing connection
+            Connector.command.Connection = Connector.conn
+            Connector.command.CommandText = query
+
             Connector.reader = Connector.command.ExecuteReader()
 
             While Connector.reader.Read()
-                ' Extract data from the first table
-                datetimes1.Add(Connector.reader.GetDateTime("datetime"))
-                milliLiters1.Add(Connector.reader.GetDouble("milliLiter"))
+                ' Extract data
+                datetimes.Add(Connector.reader.GetDateTime("datetime"))
+                milliLiters.Add(Connector.reader.GetDouble("milliLiter"))
             End While
 
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
-            Connector.reader.Close()
-        End Try
+            ' Check if Connector.reader is not Nothing before attempting to close it
+            If Connector.reader IsNot Nothing Then
+                Connector.reader.Close()
+            End If
 
-        ' Execute the second query using the existing connection
-        Connector.command.CommandText = query2
-
-        Try
-            Connector.reader = Connector.command.ExecuteReader()
-
-            While Connector.reader.Read()
-                ' Extract data from the second table
-                datetimes2.Add(Connector.reader.GetDateTime("datetime"))
-                milliLiters2.Add(Connector.reader.GetDouble("milliLiter"))
-            End While
-
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Connector.reader.Close()
-        End Try
-
-        ' Execute the third query using the existing connection
-        Connector.command.CommandText = query3
-
-        Try
-            Connector.reader = Connector.command.ExecuteReader()
-
-            While Connector.reader.Read()
-                ' Extract data from the third table
-                datetimes3.Add(Connector.reader.GetDateTime("datetime"))
-                milliLiters3.Add(Connector.reader.GetDouble("milliLiter"))
-            End While
-
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Connector.reader.Close()
             Connector.conn.Close()
         End Try
 
+        ' Clear the existing series collection
+        cartesianChart1.Series.Clear()
 
+        ' Bind the data to the chart
+        cartesianChart1.Series.Add(New LineSeries() With {
+        .Title = selectedItem,
+        .Values = New ChartValues(Of Double)(milliLiters),
+        .PointGeometry = DefaultGeometries.Square,
+        .PointGeometrySize = 15
+    })
 
-        ' Bind the data from all three tables to the chart
-        cartesianChart1.Series = New SeriesCollection() From {
-            New LineSeries() With {
-                .Title = "Tree1",
-                .Values = New ChartValues(Of Double)(milliLiters1),
-                .PointGeometry = DefaultGeometries.Square,
-                .PointGeometrySize = 15
-            },
-            New LineSeries() With {
-                .Title = "Tree2",
-                .Values = New ChartValues(Of Double)(milliLiters2),
-                .PointGeometry = DefaultGeometries.Square,
-                .PointGeometrySize = 15
-            },
-            New LineSeries() With {
-                .Title = "Tree3",
-                .Values = New ChartValues(Of Double)(milliLiters3),
-                .PointGeometry = DefaultGeometries.Square,
-                .PointGeometrySize = 15
-            }
-        }
-
-        Dim allDatetimes As List(Of DateTime) = datetimes1.Concat(datetimes2).Concat(datetimes3).Distinct().ToList()
-        allDatetimes.Sort()
-
-        ' Group datetime values by day
-        Dim groupedDatetimes As Dictionary(Of DateTime, List(Of DateTime)) = allDatetimes.GroupBy(Function(d) d.[Date]).ToDictionary(Function(g) g.Key, Function(g) g.ToList())
-        Dim uniqueDates As List(Of DateTime) = groupedDatetimes.Keys.ToList()
-        uniqueDates.Sort()
-
-        ' Assuming datetimes are X-axis values
+        ' Configure the chart axes and appearance
+        cartesianChart1.AxisX.Clear()
         cartesianChart1.AxisX.Add(New Axis With {
-        .Title = "Date",
-        .Labels = uniqueDates.Select(Function(d) d.ToString("yyyy-MM-dd")).ToArray(),
-        .Separator = New Separator With {
-            .Step = 1,
-            .IsEnabled = False
+    .Title = "",
+    .Labels = datetimes.Select(Function(dt) dt.ToString("yyyy-MM-dd")).ToArray(),
+    .Separator = New Separator With {
+        .Step = 1,
+        .IsEnabled = False
     }
-    })
+})
 
+        cartesianChart1.AxisY.Clear()
         cartesianChart1.AxisY.Add(New Axis With {
-        .Title = "MilliLiters",
-        .LabelFormatter = Function(value) value.ToString("N0") & "mL"
-    })
+    .Title = "",
+    .MinValue = 0,  ' Set the minimum value for the Y-axis
+    .MaxValue = 200, ' Set the maximum value for the Y-axis
+    .LabelFormatter = Function(value) If(value > 0, value.ToString("N0") & "mL", ""),
+    .Separator = New Separator With {
+        .IsEnabled = True  ' Keep the Y-axis line visible
+    }
+})
 
         cartesianChart1.LegendLocation = LegendLocation.Right
 
@@ -144,10 +90,7 @@ Public Class Analysisform
     End Sub
 
     Private Sub Analysis_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Cart()
-        Connect()
-        LoadYears()
-        LoadWeeks()
+        InitializeUI()
 
         'TOTAL SA MILLILITER SA TANAN TABLENAME
         Connector.Connect()
@@ -173,137 +116,220 @@ Public Class Analysisform
         producetxtbox.Text = totalMilliLiters.ToString()
     End Sub
 
-    Private Sub LoadYears()
-        ' Fetch distinct years from the database and populate ComboBox1
-        ' Example: You need to replace 'YourTableName' with the actual name of your table
-        Dim query As String = "SELECT DISTINCT YEAR(datetime) FROM ultrasonic_data1"
-        Dim years As New List(Of String)()
+    Private Sub InitializeUI()
+        ' Add items to the ComboBox
+        ComboBox5.Items.Add("TREE-01")
+        ComboBox5.Items.Add("TREE-02")
+        ComboBox5.Items.Add("TREE-03")
 
-        Try
-            command = New MySqlCommand(query, conn)
-            reader = command.ExecuteReader()
+        ' Optionally, you can set the default selected item
+        ComboBox5.SelectedIndex = 0
 
-            While reader.Read()
-                years.Add(reader(0).ToString())
-            End While
-
-            reader.Close()
-
-            ' Update ComboBox1 with the retrieved years
-            ComboBox1.DataSource = years
-        Catch ex As Exception
-            MessageBox.Show("Error fetching years: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        ' Update the chart based on the selected item
+        UpdateChart()
     End Sub
 
-    Private Sub LoadWeeks()
-        ' Populate ComboBox3 with weeks (e.g., Week 1, Week 2, etc.) - Limit to 4 weeks
-        Dim weeks As New List(Of String)()
+    Private Sub PopulateComboBox()
+        ' Add items to the ComboBox
+        ComboBox5.Items.Add("TREE-01")
+        ComboBox5.Items.Add("TREE-02")
+        ComboBox5.Items.Add("TREE-03")
 
-        For i As Integer = 1 To 5
-            weeks.Add("Week " & i)
-        Next
-
-        ComboBox3.DataSource = weeks
+        ' Optionally, you can set the default selected item
+        ComboBox5.SelectedIndex = 0
     End Sub
 
-    Private Sub ElementHost1_ChildChanged(sender As Object, e As Integration.ChildChangedEventArgs)
-
+    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox5.SelectedIndexChanged
+        UpdateChart()
     End Sub
 
-    Private Sub cartesianChart1_ChildChanged(sender As Object, e As Integration.ChildChangedEventArgs) Handles cartesianChart1.ChildChanged
+    Private Sub UpdateChart()
+        ' Hide the chart
+        cartesianChart1.Hide()
 
+        ' Get the selected item
+        selectedItem = ComboBox5.SelectedItem.ToString()
+
+        ' Use the selected item to construct the table name
+        Dim tableName As String = If(ComboBox5.SelectedIndex = 0, "ultrasonic_data", $"ultrasonic_data{ComboBox5.SelectedIndex}")
+
+        ' Call the Cart method to update the chart
+        Cart(tableName)
+
+        ' Show the chart after updating
+        cartesianChart1.Show()
     End Sub
 
-    Private Sub Label1_Click(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs)
-
-    End Sub
-
-    Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
-        ' When the Year ComboBox changes, update the data in the Month ComboBox
-        If ComboBox1.SelectedItem IsNot Nothing Then
-            UpdateMonthComboBox()
-            UpdateTotalMilliLitersTextBox()
-        End If
+    Private Sub cartesianChart1_DataClick(sender As Object, chartPoint As ChartPoint) Handles cartesianChart1.DataClick
 
     End Sub
 
-    Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
-        UpdateTotalMilliLitersTextBox()
-    End Sub
+    'mao najud 
+    'Private Sub LoadYears()
+    '    ' Fetch distinct years from the database and populate ComboBox1
+    '    ' Example: You need to replace 'YourTableName' with the actual name of your table
+    '    Dim query As String = "SELECT DISTINCT YEAR(datetime) FROM ultrasonic_data1"
+    '    Dim years As New List(Of String)()
 
-    Private Sub UpdateMonthComboBox()
-        ' Fetch the months for the selected year from the database and update ComboBox2
-        ' Example: You need to replace 'YourTableName' with the actual name of your table
-        Dim selectedYear As String = ComboBox1.SelectedItem.ToString()
-        Dim query As String = $"SELECT DISTINCT MONTH(datetime) FROM ultrasonic_data1 WHERE YEAR(datetime) = {selectedYear}"
-        Dim months As New List(Of String)()
+    '    Try
+    '        command = New MySqlCommand(query, conn)
+    '        reader = command.ExecuteReader()
 
-        Try
-            command = New MySqlCommand(query, conn)
-            reader = command.ExecuteReader()
+    '        While reader.Read()
+    '            years.Add(reader(0).ToString())
+    '        End While
 
-            While reader.Read()
-                ' Convert month number to month name
-                Dim monthNumber As Integer = CInt(reader(0))
-                Dim monthName As String = New DateTime(1, monthNumber, 1).ToString("MMMM")
-                months.Add(monthName)
-            End While
+    '        reader.Close()
 
-            reader.Close()
+    '        ' Update ComboBox1 with the retrieved years
+    '        ComboBox1.DataSource = years
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error fetching years: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Sub
 
-            ' Update ComboBox2 with the retrieved months
-            ComboBox2.DataSource = months
-        Catch ex As Exception
-            MessageBox.Show("Error fetching months: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
+    'Private Sub LoadWeeks()
+    '    ' Populate ComboBox3 with weeks (e.g., Week 1, Week 2, etc.) - Limit to 4 weeks
+    '    Dim weeks As New List(Of String)()
 
-    Private Sub UpdateTotalMilliLitersTextBox()
-        ' Fetch and display the total milliLiters for the selected Year, Month, and Week
-        Dim selectedYear As String = ComboBox1.SelectedItem?.ToString()
-        Dim selectedMonth As String = ComboBox2.SelectedItem?.ToString()
+    '    For i As Integer = 1 To 5
+    '        weeks.Add("Week " & i)
+    '    Next
 
-        ' Check if an item is selected in ComboBox3
-        If ComboBox3.SelectedItem IsNot Nothing Then
-            Dim selectedWeek As String = ComboBox3.SelectedItem.ToString()
+    '    ComboBox3.DataSource = weeks
+    'End Sub
 
-            ' Calculate the first day of the selected month
-            Dim firstDayOfMonth As New DateTime(Integer.Parse(selectedYear), DateTime.ParseExact(selectedMonth, "MMMM", CultureInfo.InvariantCulture).Month, 1)
 
-            ' Calculate the starting and ending dates for the selected week
-            Dim startWeek As Integer = (Integer.Parse(selectedWeek.Replace("Week ", "")) - 1)
-            Dim startDate As DateTime = firstDayOfMonth.AddDays(startWeek * 7)
+    'Private Sub LoadDevices()
+    '    ' Fetch distinct devices from the database and populate ComboBox4
+    '    ' Example: You need to replace 'YourTableName' with the actual name of your table
+    '    Dim query As String = "SELECT DISTINCT device FROM ultrasonic_data1"
+    '    Dim devices As New List(Of String)()
 
-            Dim endDate As DateTime = startDate.AddDays(6)
+    '    Try
+    '        command = New MySqlCommand(query, conn)
+    '        reader = command.ExecuteReader()
 
-            ' Example: You need to replace 'YourTableName' with the actual name of your table
-            Dim query As String = $"SELECT SUM(milliLiter) FROM ultrasonic_data1 WHERE YEAR(datetime) = {selectedYear} AND MONTH(datetime) = {startDate.Month} AND DAYOFYEAR(datetime) BETWEEN {startDate.DayOfYear} AND {endDate.DayOfYear}"
+    '        While reader.Read()
+    '            devices.Add(reader(0).ToString())
+    '        End While
 
-            Try
-                command = New MySqlCommand(query, conn)
-                Dim totalMilliLiters As Object = command.ExecuteScalar()
+    '        reader.Close()
 
-                ' Display the total milliLiters in TextBox1
-                TextBox1.Text = If(totalMilliLiters IsNot Nothing, totalMilliLiters.ToString(), "0")
-            Catch ex As Exception
-                MessageBox.Show("Error fetching total milliLiters: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        Else
-            ' Handle the case where no week is selected
-            TextBox1.Text = "0"
-        End If
-    End Sub
+    '        ' Update ComboBox4 with the retrieved devices
+    '        ComboBox4.DataSource = devices
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error fetching devices: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Sub
 
-    Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
-        UpdateTotalMilliLitersTextBox()
-    End Sub
+    'Private Sub ComboBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+    '    ' When the Year ComboBox changes, update the data in the Month ComboBox
+    '    If ComboBox1.SelectedItem IsNot Nothing Then
+    '        UpdateMonthComboBox()
+    '        LoadDevices()
+    '        UpdateTotalMilliLitersTextBox()
+    '    End If
 
-    Private Sub producetxtbox_TextChanged(sender As Object, e As EventArgs) Handles producetxtbox.TextChanged
+    'End Sub
 
-    End Sub
+    'Private Sub ComboBox2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox2.SelectedIndexChanged
+    '    UpdateTotalMilliLitersTextBox()
+    'End Sub
+
+    'Private Sub UpdateMonthComboBox()
+    '    ' Fetch the months for the selected year from the database and update ComboBox2
+    '    ' Example: You need to replace 'YourTableName' with the actual name of your table
+    '    Dim selectedYear As String = ComboBox1.SelectedItem.ToString()
+    '    Dim query As String = $"SELECT DISTINCT MONTH(datetime) FROM ultrasonic_data1 WHERE YEAR(datetime) = {selectedYear}"
+    '    Dim months As New List(Of String)()
+
+    '    Try
+    '        command = New MySqlCommand(query, conn)
+    '        reader = command.ExecuteReader()
+
+    '        While reader.Read()
+    '            ' Convert month number to month name
+    '            Dim monthNumber As Integer = CInt(reader(0))
+    '            Dim monthName As String = New DateTime(1, monthNumber, 1).ToString("MMMM")
+    '            months.Add(monthName)
+    '        End While
+
+    '        reader.Close()
+
+    '        ' Update ComboBox2 with the retrieved months
+    '        ComboBox2.DataSource = months
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error fetching months: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+
+    'End Sub
+
+    'Private Sub UpdateTotalMilliLitersTextBox()
+    '    ' Fetch and display the total milliLiters for the selected Year, Month, Week, and Device
+    '    Dim selectedYear As String = ComboBox1.SelectedItem?.ToString()
+    '    Dim selectedMonth As String = ComboBox2.SelectedItem?.ToString()
+
+    '    ' Check if selectedMonth is not null before parsing
+    '    If selectedYear IsNot Nothing AndAlso selectedMonth IsNot Nothing Then
+    '        ' Check if an item is selected in ComboBox3 and ComboBox4
+    '        If ComboBox3.SelectedItem IsNot Nothing AndAlso ComboBox4.SelectedItem IsNot Nothing Then
+    '            Dim selectedWeek As String = ComboBox3.SelectedItem.ToString()
+    '            Dim selectedDevice As String = ComboBox4.SelectedItem.ToString()
+
+    '            ' Calculate the first day of the selected month
+    '            Dim firstDayOfMonth As New DateTime(Integer.Parse(selectedYear), DateTime.ParseExact(selectedMonth, "MMMM", CultureInfo.InvariantCulture).Month, 1)
+
+    '            ' Calculate the starting and ending dates for the selected week
+    '            Dim startWeek As Integer = (Integer.Parse(selectedWeek.Replace("Week ", "")) - 1)
+    '            Dim startDate As DateTime = firstDayOfMonth.AddDays(startWeek * 7)
+    '            Dim endDate As DateTime = startDate.AddDays(6)
+
+    '            ' Example: You need to replace 'YourTableName' with the actual name of your table
+    '            Dim query As String = "SELECT SUM(milliLiter) FROM ultrasonic_data1 WHERE YEAR(datetime) = @Year AND MONTH(datetime) = @Month AND DAYOFYEAR(datetime) BETWEEN @StartDay AND @EndDay AND device = @Device"
+
+    '            Try
+    '                Using conn As New MySqlConnection("server=127.0.0.1;userid=root;password='';database=ultrasonic_data")
+    '                    conn.Open()
+
+    '                    Using command As New MySqlCommand(query, conn)
+    '                        ' Use parameterized queries to prevent SQL injection
+    '                        command.Parameters.AddWithValue("@Year", selectedYear)
+    '                        command.Parameters.AddWithValue("@Month", startDate.Month)
+    '                        command.Parameters.AddWithValue("@StartDay", startDate.DayOfYear)
+    '                        command.Parameters.AddWithValue("@EndDay", endDate.DayOfYear)
+    '                        command.Parameters.AddWithValue("@Device", selectedDevice)
+
+    '                        Dim totalMilliLiters As Object = command.ExecuteScalar()
+
+    '                        If totalMilliLiters IsNot Nothing AndAlso Not DBNull.Value.Equals(totalMilliLiters) Then
+    '                            ' Display the total milliLiters in TextBox1
+    '                            TextBox1.Text = totalMilliLiters.ToString()
+    '                        Else
+    '                            ' Handle the case where no data is found for the selected week and device
+    '                            TextBox1.Text = "0"
+    '                        End If
+    '                    End Using
+    '                End Using
+    '            Catch ex As Exception
+    '                ' Handle the case where there is an error in the query or execution
+    '                MessageBox.Show("Error fetching total milliLiters: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '            End Try
+    '        Else
+    '            ' Handle the case where no week or device is selected
+    '            TextBox1.Text = "0"
+    '        End If
+    '    Else
+    '        ' Handle the case where selectedYear or selectedMonth is null
+    '        MessageBox.Show("Please select a year and month.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End If
+    'End Sub
+
+    'Private Sub ComboBox3_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox3.SelectedIndexChanged
+    '    UpdateTotalMilliLitersTextBox()
+    'End Sub
+
+    'Private Sub ComboBox4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox4.SelectedIndexChanged
+    '    UpdateTotalMilliLitersTextBox()
+    'End Sub
 End Class

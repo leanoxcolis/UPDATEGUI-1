@@ -3,7 +3,8 @@ Imports Guna.UI2.WinForms
 Imports MySql.Data.MySqlClient
 
 Public Class dashboardform
-    Private Const TotalDurationSeconds As Integer = 60 ' 2 minutes * 60 seconds
+    'Private Const TotalDurationSeconds As Integer = 60 ' 2 minutes * 60 seconds
+    Private TotalDurationSeconds As Integer = 120 ' Set the total duration for the progress bar
     Dim progress As Integer = 0
     Dim totalSteps As Integer = 100
     Dim anglePerStep As Single = 360 / totalSteps
@@ -12,36 +13,36 @@ Public Class dashboardform
     Public Sub Gauge360Example()
         SolidGauge1.Uses360Mode = False
         SolidGauge1.From = 0
-        SolidGauge1.To = 100
-        SolidGauge1.Value = GetCurrentPercentage()
+        SolidGauge1.To = 200
+        'SolidGauge1.Value =   'GetCurrentPercentage()
 
     End Sub
 
-    Public Function GetCurrentPercentage() As Integer
-        Dim milliLiter As Integer = 0
-        Try
-            Connect()
-            Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
-            'Dim cmd As MySqlCommand = New MySqlCommand(query, connection)
-            command = New MySqlCommand(query, conn)
-            Dim reader = command.ExecuteReader()
+    'Public Function GetCurrentPercentage() As Integer
+    '    Dim milliLiter As Integer = 0
+    '    Try
+    '        Connect()
+    '        Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
+    '        'Dim cmd As MySqlCommand = New MySqlCommand(query, connection)
+    '        command = New MySqlCommand(query, conn)
+    '        Dim reader = command.ExecuteReader()
 
 
-            While reader.Read()
-                query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
-                milliLiter = Convert.ToInt32(reader("milliLiter"))
+    '        While reader.Read()
+    '            query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
+    '            milliLiter = Convert.ToInt32(reader("milliLiter"))
 
-            End While
-            'percentageGauge.Value = percentage
+    '        End While
+    '        'percentageGauge.Value = percentage
 
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
-        Finally
-            conn.Close()
-        End Try
+    '    Catch ex As Exception
+    '        MessageBox.Show("Error: " & ex.Message)
+    '    Finally
+    '        conn.Close()
+    '    End Try
 
-        Return milliLiter
-    End Function
+    '    Return milliLiter
+    'End Function
 
     Private Sub dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim timer As New Timer()
@@ -54,8 +55,8 @@ Public Class dashboardform
         ''BATTERY
         Guna2CircleProgressBar1.Maximum = TotalDurationSeconds
         Timer1.Interval = 1000 ' Set the timer interval to 1000 milliseconds (1 second)
-        Guna2CircleProgressBar1.Value = lastProgress
-        Label6.Text = $"{CInt((Guna2CircleProgressBar1.Value / Guna2CircleProgressBar1.Maximum) * 100)}%"
+        Guna2CircleProgressBar1.Value = TotalDurationSeconds ' Start from the maximum value
+        Label6.Text = "100%"
 
         Timer1.Start()
 
@@ -96,25 +97,26 @@ Public Class dashboardform
         ' Bind the merged DataTable to the DataGridView
         datagridview1.DataSource = mergedTable
 
-
-
-        ' CHECK IF THE VALUE EXCEEDS 70
-        Dim mlValue As Integer = GetMilliliterValueFromDatabase()
-        If mlValue > 70 Then
-            Dim notificationForm As New notification()
-            notificationForm.TopLevel = False
-            notifpanel.Controls.Add(notificationForm)
-            notificationForm.Show()
-        End If
+        '' CHECK IF THE VALUE EXCEEDS 150ml
+        'Dim mlValue As Integer = GetMilliliterValueFromDatabase()
+        'If mlValue > 150 Then
+        '    Dim notificationForm As New notification()
+        '    notificationForm.TopLevel = False
+        '    notifpanel.Controls.Add(notificationForm)
+        '    notificationForm.Show()
+        'End If
 
     End Sub
 
-    Private Function GetMilliliterValueFromDatabase() As Integer
-
+    Private Function GetMilliliterValueFromDatabase(tableName As String) As Integer
         Dim mlValue As Integer = 0
+
         Using conn As New MySqlConnection("server=127.0.0.1;userid=root;password='';database=ultrasonic_data")
             conn.Open()
-            Using cmd As New MySqlCommand("SELECT milliliter FROM ultrasonic_data", conn)
+
+            ' Use parameterized query to prevent SQL injection
+            Dim query As String = $"SELECT milliliter FROM {tableName}"
+            Using cmd As New MySqlCommand(query, conn)
                 Using reader As MySqlDataReader = cmd.ExecuteReader()
                     If reader.Read() Then
                         mlValue = Convert.ToInt32(reader("milliliter"))
@@ -154,14 +156,73 @@ Public Class dashboardform
 
     End Sub
 
+    Private notificationShown As Boolean = False ' Flag to track if the notification is currently shown
+
+    Private Sub ShowNotification()
+        ' Only show the notification if it's not already shown
+        If Not notificationShown Then
+            Dim notificationForm As New notification()
+            notificationForm.TopLevel = False
+            notifpanel.Controls.Add(notificationForm)
+
+            notificationForm.Show()
+            notificationShown = True
+
+            ' Hide TextBox1 when showing the notification
+            TextBox1.Visible = False
+        End If
+    End Sub
+
+    Private Sub HideNotification()
+        ' Only hide the notification if it's currently shown
+        If notificationShown Then
+            ' Assuming your notification form has a Close method to hide it
+            For Each control In notifpanel.Controls
+                If TypeOf control Is notification Then
+                    DirectCast(control, notification).Close()
+                End If
+            Next
+            notificationShown = False
+
+            ' Show TextBox1 when hiding the notification
+            TextBox1.Visible = True
+        End If
+    End Sub
+
     Private Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
+
+        Dim mlValueFromTable1 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data")
+        Dim mlValueFromTable2 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data1")
+        Dim mlValueFromTable3 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data2")
+
         If e.RowIndex >= 0 Then ' Ensure a valid row is clicked
             Dim selectedRow As DataGridViewRow = datagridview1.Rows(e.RowIndex)
             Dim deviceValue As String = selectedRow.Cells("device").Value.ToString()
             Dim datetimeValue As String = selectedRow.Cells("datetime").Value.ToString()
 
+            ' Declare milliLiterValue outside of the If block
+            Dim milliLiterValue As Integer
+
+            ' Check if the value is not null before attempting to convert to Integer
+            Dim milliLiterCellValue As Object = selectedRow.Cells("milliLiter").Value
+            If milliLiterCellValue IsNot Nothing AndAlso Integer.TryParse(milliLiterCellValue.ToString(), milliLiterValue) Then
+                ' The value is not null, and it can be successfully parsed as an Integer
+                ' Do something with milliLiterValue if needed
+            Else
+                ' Handle the case where the value is null or cannot be parsed as an Integer
+                ' You might want to display an error message or take appropriate action
+            End If
+
+            ' Insert the code to check if the milliliter value exceeds 150ml
+            If milliLiterValue >= 150 Then
+                ShowNotification()
+            Else
+                HideNotification()
+            End If
+
             device.Text = deviceValue
             datestarted.Text = datetimeValue
+            SolidGauge1.Value = milliLiterValue ' Assuming SolidGauge1 is a control with a 'Value' property
         End If
     End Sub
 
@@ -180,12 +241,12 @@ Public Class dashboardform
 
     'SA BATTERY NA CODE NI
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If Guna2CircleProgressBar1.Value < Guna2CircleProgressBar1.Maximum Then
-            Guna2CircleProgressBar1.Value += 1
+        If Guna2CircleProgressBar1.Value > 0 Then
+            Guna2CircleProgressBar1.Value -= 1
             ' Example: Update the label text with the percentage as a whole number
             Label6.Text = $"{CInt((Guna2CircleProgressBar1.Value / Guna2CircleProgressBar1.Maximum) * 100)}%"
         Else
-            ' Example: Stop the timer when the progress reaches the maximum value
+            ' Example: Stop the timer when the progress reaches 0
             Timer1.Stop()
 
             ' Store the last progress value
