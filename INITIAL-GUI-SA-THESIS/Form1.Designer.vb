@@ -187,8 +187,7 @@ Partial Class Form1
         '
         'paneldashboard
         '
-        Me.paneldashboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(34, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(49, Byte), Integer))
-        Me.paneldashboard.BackgroundImage = CType(resources.GetObject("paneldashboard.BackgroundImage"), System.Drawing.Image)
+        Me.paneldashboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
         Me.paneldashboard.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.paneldashboard.Controls.Add(Me.SolidGauge1)
         Me.paneldashboard.Controls.Add(Me.Label1)

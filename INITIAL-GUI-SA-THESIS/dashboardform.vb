@@ -4,7 +4,7 @@ Imports MySql.Data.MySqlClient
 
 Public Class dashboardform
     'Private Const TotalDurationSeconds As Integer = 60 ' 2 minutes * 60 seconds
-    Private TotalDurationSeconds As Integer = 120 ' Set the total duration for the progress bar
+    Private TotalDurationSeconds As Integer = 240 ' Set the total duration for the progress bar
     Dim progress As Integer = 0
     Dim totalSteps As Integer = 100
     Dim anglePerStep As Single = 360 / totalSteps
@@ -14,41 +14,46 @@ Public Class dashboardform
         SolidGauge1.Uses360Mode = False
         SolidGauge1.From = 0
         SolidGauge1.To = 200
-        'SolidGauge1.Value =   'GetCurrentPercentage()
+        SolidGauge1.Value = GetCurrentPercentage()
 
     End Sub
 
-    'Public Function GetCurrentPercentage() As Integer
-    '    Dim milliLiter As Integer = 0
-    '    Try
-    '        Connect()
-    '        Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
-    '        'Dim cmd As MySqlCommand = New MySqlCommand(query, connection)
-    '        command = New MySqlCommand(query, conn)
-    '        Dim reader = command.ExecuteReader()
+    Public Function GetCurrentPercentage() As Integer
+        Dim milliLiter As Integer = 0
+        Try
+            Connect()
+            Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
+            command = New MySqlCommand(query, conn)
+            Dim reader = command.ExecuteReader()
 
+            While reader.Read()
+                query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
+                milliLiter = Convert.ToInt32(reader("milliLiter"))
+            End While
 
-    '        While reader.Read()
-    '            query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
-    '            milliLiter = Convert.ToInt32(reader("milliLiter"))
+            If milliLiter >= 150 Then
+                ShowNotification()
+            ElseIf milliLiter < 0 Then
+                ShowNegativeNotification()
+            Else
+                HideNotification()
+            End If
 
-    '        End While
-    '        'percentageGauge.Value = percentage
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message)
+        Finally
+            conn.Close()
+        End Try
 
-    '    Catch ex As Exception
-    '        MessageBox.Show("Error: " & ex.Message)
-    '    Finally
-    '        conn.Close()
-    '    End Try
-
-    '    Return milliLiter
-    'End Function
+        Return milliLiter
+    End Function
 
     Private Sub dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim timer As New Timer()
         timer.Interval = 2000 ' 2000 milliseconds (2 seconds)
         timer.Start()
         Gauge360Example()
+        GetCurrentPercentage()
         AddHandler timer.Tick, AddressOf Gauge360Example
 
 
@@ -57,12 +62,29 @@ Public Class dashboardform
         Timer1.Interval = 1000 ' Set the timer interval to 1000 milliseconds (1 second)
         Guna2CircleProgressBar1.Value = TotalDurationSeconds ' Start from the maximum value
         Label6.Text = "100%"
-
         Timer1.Start()
 
+
+
+        Dim refreshTimer As New Timer()
+        refreshTimer.Interval = 2000
+        AddHandler refreshTimer.Tick, AddressOf RefreshData
+        refreshTimer.Start()
+
+
+    End Sub
+
+    Private Sub RefreshData(sender As Object, e As EventArgs)
+        ' Refresh the data in the DataGridView
+        RefreshDataGridView()
+    End Sub
+
+    Private Sub RefreshDataGridView()
+        ' Refresh the data in the DataGridView
+        ' You may need to re-implement the code to retrieve and bind the data to the DataGridView
+        ' For simplicity, I'm reusing your existing code for retrieving and binding the data
         Connector.Connect()
 
-        ' Define SQL queries for the two tables
         Dim query1 As String = "SELECT * FROM ultrasonic_data"
         Dim query2 As String = "SELECT * FROM ultrasonic_data1"
         Dim query3 As String = "SELECT * FROM ultrasonic_data2"
@@ -71,9 +93,9 @@ Public Class dashboardform
         Dim adapter1 As New MySqlDataAdapter(cmd1)
         Dim dataTable1 As New DataTable()
 
-        Dim cmd2 As New MySqlCommand(query2, Connector.conn)
-        Dim adapter2 As New MySqlDataAdapter(cmd2)
-        Dim dataTable2 As New DataTable()
+        'Dim cmd2 As New MySqlCommand(query2, Connector.conn)
+        'Dim adapter2 As New MySqlDataAdapter(cmd2)
+        'Dim dataTable2 As New DataTable()
 
         Dim cmd3 As New MySqlCommand(query3, Connector.conn)
         Dim adapter3 As New MySqlDataAdapter(cmd3)
@@ -82,7 +104,7 @@ Public Class dashboardform
         Try
             ' Fill the DataTables with data from the queries
             adapter1.Fill(dataTable1)
-            adapter2.Fill(dataTable2)
+            'adapter2.Fill(dataTable2)
             adapter3.Fill(dataTable3)
         Catch ex As Exception
 
@@ -91,27 +113,18 @@ Public Class dashboardform
         ' Merge the two DataTables into one
         Dim mergedTable As New DataTable()
         mergedTable.Merge(dataTable1)
-        mergedTable.Merge(dataTable2)
+        'mergedTable.Merge(dataTable2)
         mergedTable.Merge(dataTable3)
 
         ' Bind the merged DataTable to the DataGridView
         datagridview1.DataSource = mergedTable
-
-        '' CHECK IF THE VALUE EXCEEDS 150ml
-        'Dim mlValue As Integer = GetMilliliterValueFromDatabase()
-        'If mlValue > 150 Then
-        '    Dim notificationForm As New notification()
-        '    notificationForm.TopLevel = False
-        '    notifpanel.Controls.Add(notificationForm)
-        '    notificationForm.Show()
-        'End If
 
     End Sub
 
     Private Function GetMilliliterValueFromDatabase(tableName As String) As Integer
         Dim mlValue As Integer = 0
 
-        Using conn As New MySqlConnection("server=127.0.0.1;userid=root;password='';database=ultrasonic_data")
+        Using conn As New MySqlConnection("server=127.0.0.1;userid=root;password='';database=rubber_thesisdb")
             conn.Open()
 
             ' Use parameterized query to prevent SQL injection
@@ -157,6 +170,7 @@ Public Class dashboardform
     End Sub
 
     Private notificationShown As Boolean = False ' Flag to track if the notification is currently shown
+    Private blinkingTimer As New Timer()
 
     Private Sub ShowNotification()
         ' Only show the notification if it's not already shown
@@ -170,24 +184,70 @@ Public Class dashboardform
 
             ' Hide TextBox1 when showing the notification
             TextBox1.Visible = False
+
+            ' Set up blinking effect
+            blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
+            AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
+            blinkingTimer.Start()
         End If
+    End Sub
+
+    Private Sub ShowNegativeNotification()
+        ' Display the negative notification if it's not already shown
+        If Not notificationShown Then
+            Dim negativeNotificationForm As New negativenotification1()
+            negativeNotificationForm.TopLevel = False
+            notifpanel.Controls.Add(negativeNotificationForm)
+
+            negativeNotificationForm.Show()
+            notificationShown = True
+
+            ' Hide TextBox1 when showing the notification
+            TextBox1.Visible = False
+
+            ' Set up blinking effect
+            blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
+            AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
+            blinkingTimer.Start()
+        End If
+    End Sub
+
+    Private Sub BlinkNotification(sender As Object, e As EventArgs)
+        ' Toggle the visibility of the notification form
+        For Each control In notifpanel.Controls
+            If TypeOf control Is notification Then
+                control.Visible = Not control.Visible
+            End If
+        Next
     End Sub
 
     Private Sub HideNotification()
         ' Only hide the notification if it's currently shown
         If notificationShown Then
-            ' Assuming your notification form has a Close method to hide it
+            ' Stop the blinking timer
+            blinkingTimer.Stop()
+
+            ' Assuming your notification forms have a Close method to hide them
             For Each control In notifpanel.Controls
-                If TypeOf control Is notification Then
-                    DirectCast(control, notification).Close()
+                If TypeOf control Is Form Then
+                    Dim currentForm As Form = DirectCast(control, Form)
+
+                    ' Check the type of the form and close it accordingly
+                    If TypeOf currentForm Is notification Then
+                        DirectCast(currentForm, notification).Close()
+                    ElseIf TypeOf currentForm Is negativenotification1 Then
+                        DirectCast(currentForm, negativenotification1).Close()
+                    End If
                 End If
             Next
+
             notificationShown = False
 
             ' Show TextBox1 when hiding the notification
             TextBox1.Visible = True
         End If
     End Sub
+
 
     Private Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
 
@@ -211,13 +271,6 @@ Public Class dashboardform
             Else
                 ' Handle the case where the value is null or cannot be parsed as an Integer
                 ' You might want to display an error message or take appropriate action
-            End If
-
-            ' Insert the code to check if the milliliter value exceeds 150ml
-            If milliLiterValue >= 150 Then
-                ShowNotification()
-            Else
-                HideNotification()
             End If
 
             device.Text = deviceValue
@@ -255,6 +308,10 @@ Public Class dashboardform
     End Sub
 
     Private Sub SolidGauge1_ChildChanged_1(sender As Object, e As Integration.ChildChangedEventArgs)
+
+    End Sub
+
+    Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
 
     End Sub
 End Class

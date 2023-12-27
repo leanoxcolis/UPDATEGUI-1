@@ -192,6 +192,12 @@
     <Compile Include="notification.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="negativenotification1.Designer.vb">
+      <DependentUpon>negativenotification1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="negativenotification1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="overview.Designer.vb">
       <DependentUpon>overview.vb</DependentUpon>
     </Compile>
@@ -233,6 +239,9 @@
     <EmbeddedResource Include="notification.resx">
       <DependentUpon>notification.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="negativenotification1.resx">
+      <DependentUpon>negativenotification1.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="overview.resx">
       <DependentUpon>overview.vb</DependentUpon>
     </EmbeddedResource>
@@ -255,6 +264,9 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icons8-minimize-30.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

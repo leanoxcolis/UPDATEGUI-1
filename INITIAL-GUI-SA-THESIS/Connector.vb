@@ -10,7 +10,7 @@ Module Connector
     Public Sub Connect()
         Try
             conn = New MySqlConnection With {
-            .ConnectionString = "server=127.0.0.1;userid=root;password='';database=ultrasonic_data"
+            .ConnectionString = "server=127.0.0.1;userid=root;password='';database=rubber_thesisdb"
             }
 
             conn.Open()
