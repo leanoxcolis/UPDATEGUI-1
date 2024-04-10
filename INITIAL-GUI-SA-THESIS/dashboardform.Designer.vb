@@ -31,7 +31,6 @@ Partial Class dashboardform
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.MySqlDataAdapter1 = New MySql.Data.MySqlClient.MySqlDataAdapter()
         Me.notifpanel = New Guna.UI2.WinForms.Guna2Panel()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Guna2Elipse1 = New Guna.UI2.WinForms.Guna2Elipse(Me.components)
         Me.Guna2Elipse2 = New Guna.UI2.WinForms.Guna2Elipse(Me.components)
@@ -54,7 +53,6 @@ Partial Class dashboardform
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.Panel1.SuspendLayout()
         CType(Me.datagridview1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.notifpanel.SuspendLayout()
         Me.Guna2Panel4.SuspendLayout()
         Me.Guna2CircleProgressBar1.SuspendLayout()
         Me.Guna2Panel3.SuspendLayout()
@@ -149,26 +147,12 @@ Partial Class dashboardform
         'notifpanel
         '
         Me.notifpanel.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.notifpanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
-        Me.notifpanel.Controls.Add(Me.TextBox1)
+        Me.notifpanel.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
         Me.notifpanel.Location = New System.Drawing.Point(872, 400)
         Me.notifpanel.Name = "notifpanel"
         Me.notifpanel.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.notifpanel.Size = New System.Drawing.Size(329, 281)
+        Me.notifpanel.Size = New System.Drawing.Size(282, 235)
         Me.notifpanel.TabIndex = 9
-        '
-        'TextBox1
-        '
-        Me.TextBox1.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
-        Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.TextBox1.Font = New System.Drawing.Font("Century Gothic", 36.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(3, 106)
-        Me.TextBox1.Multiline = True
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(323, 78)
-        Me.TextBox1.TabIndex = 0
-        Me.TextBox1.Text = "No Alert"
-        Me.TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Timer1
         '
@@ -211,9 +195,9 @@ Partial Class dashboardform
         Me.Label3.Font = New System.Drawing.Font("Century Gothic", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(87, 17)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(101, 27)
+        Me.Label3.Size = New System.Drawing.Size(89, 27)
         Me.Label3.TabIndex = 5
-        Me.Label3.Text = "BATTERY"
+        Me.Label3.Text = "Battery"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Guna2CircleProgressBar1
@@ -263,9 +247,9 @@ Partial Class dashboardform
         Me.Label2.Font = New System.Drawing.Font("Century Gothic", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(104, 17)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(71, 27)
+        Me.Label2.Size = New System.Drawing.Size(108, 27)
         Me.Label2.TabIndex = 7
-        Me.Label2.Text = "Level"
+        Me.Label2.Text = "Milliliters"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'SolidGauge1
@@ -375,8 +359,6 @@ Partial Class dashboardform
         Me.Text = "dashboard"
         Me.Panel1.ResumeLayout(False)
         CType(Me.datagridview1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.notifpanel.ResumeLayout(False)
-        Me.notifpanel.PerformLayout()
         Me.Guna2Panel4.ResumeLayout(False)
         Me.Guna2Panel4.PerformLayout()
         Me.Guna2CircleProgressBar1.ResumeLayout(False)
@@ -414,6 +396,5 @@ Partial Class dashboardform
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents datestarted As TextBox
     Friend WithEvents Label5 As Label
-    Friend WithEvents TextBox1 As TextBox
     Friend WithEvents Timer2 As Timer
 End Class

@@ -186,6 +186,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="noalert.Designer.vb">
+      <DependentUpon>noalert.vb</DependentUpon>
+    </Compile>
+    <Compile Include="noalert.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="notification.Designer.vb">
       <DependentUpon>notification.vb</DependentUpon>
     </Compile>
@@ -235,6 +241,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="noalert.resx">
+      <DependentUpon>noalert.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="notification.resx">
       <DependentUpon>notification.vb</DependentUpon>

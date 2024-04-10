@@ -4,7 +4,7 @@ Imports MySql.Data.MySqlClient
 
 Public Class dashboardform
     'Private Const TotalDurationSeconds As Integer = 60 ' 2 minutes * 60 seconds
-    Private TotalDurationSeconds As Integer = 240 ' Set the total duration for the progress bar
+    Private TotalDurationSeconds As Integer = 360 ' Set the total duration for the progress bar
     Dim progress As Integer = 0
     Dim totalSteps As Integer = 100
     Dim anglePerStep As Single = 360 / totalSteps
@@ -18,26 +18,53 @@ Public Class dashboardform
 
     End Sub
 
+    Private blinkingTimer As New Timer()
+
     Public Function GetCurrentPercentage() As Integer
         Dim milliLiter As Integer = 0
         Try
             Connect()
-            Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
+            Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime = NOW() ORDER BY datetime "
             command = New MySqlCommand(query, conn)
             Dim reader = command.ExecuteReader()
 
-            While reader.Read()
-                query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime <= NOW() ORDER BY datetime DESC LIMIT 1"
-                milliLiter = Convert.ToInt32(reader("milliLiter"))
-            End While
+            'While reader.Read()
+            '    query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime = NOW() ORDER BY datetime "
+            '    milliLiter = Convert.ToInt32(reader("milliLiter"))
+            'End While
 
             If milliLiter >= 150 Then
-                ShowNotification()
+                ' MilliLiters exceeds 150, show positive notification form in notifpanel
+                Dim notificationForm As New notification()
+                notificationForm.TopLevel = False
+                notificationForm.AutoScroll = True
+                notifpanel.Controls.Clear()
+                notifpanel.Controls.Add(notificationForm)
+                notificationForm.Show()
+                notifpanel.Visible = True
+                StartBlinking()
             ElseIf milliLiter < 0 Then
-                ShowNegativeNotification()
+                ' MilliLiters is negative, show negative notification form in notifpanel
+                Dim negativeNotificationForm As New negativenotification1()
+                negativeNotificationForm.TopLevel = False
+                negativeNotificationForm.AutoScroll = True
+                notifpanel.Controls.Clear()
+                notifpanel.Controls.Add(negativeNotificationForm)
+                negativeNotificationForm.Show()
+                notifpanel.Visible = True
+                StartBlinking()
             Else
-                HideNotification()
+                ' milliLiter is between 0 and 149, show noalert form in notifpanel
+                Dim noAlertForm As New noalert()
+                noAlertForm.TopLevel = False
+                noAlertForm.AutoScroll = True
+                notifpanel.Controls.Clear()
+                notifpanel.Controls.Add(noAlertForm)
+                noAlertForm.Show()
+                notifpanel.Visible = True
+                'StopBlinking() ' Stop blinking when no alert is displayed
             End If
+
 
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message)
@@ -46,9 +73,31 @@ Public Class dashboardform
         End Try
 
         Return milliLiter
+
     End Function
 
+    Private Sub StartBlinking()
+        blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
+        AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
+        blinkingTimer.Start()
+    End Sub
+
+    Private Sub StopBlinking()
+        blinkingTimer.Stop()
+        RemoveHandler blinkingTimer.Tick, AddressOf BlinkNotification
+    End Sub
+
+    Private Sub BlinkNotification(sender As Object, e As EventArgs)
+        ' Toggle the visibility of the notification forms
+        For Each control In notifpanel.Controls
+            If TypeOf control Is notification Or TypeOf control Is negativenotification1 Then
+                control.Visible = Not control.Visible
+            End If
+        Next
+    End Sub
+
     Private Sub dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        RefreshDataGridView()
         Dim timer As New Timer()
         timer.Interval = 2000 ' 2000 milliseconds (2 seconds)
         timer.Start()
@@ -68,7 +117,7 @@ Public Class dashboardform
 
         Dim refreshTimer As New Timer()
         refreshTimer.Interval = 2000
-        AddHandler refreshTimer.Tick, AddressOf RefreshData
+        ' AddHandler refreshTimer.Tick, AddressOf RefreshData
         refreshTimer.Start()
 
 
@@ -169,84 +218,7 @@ Public Class dashboardform
 
     End Sub
 
-    Private notificationShown As Boolean = False ' Flag to track if the notification is currently shown
-    Private blinkingTimer As New Timer()
 
-    Private Sub ShowNotification()
-        ' Only show the notification if it's not already shown
-        If Not notificationShown Then
-            Dim notificationForm As New notification()
-            notificationForm.TopLevel = False
-            notifpanel.Controls.Add(notificationForm)
-
-            notificationForm.Show()
-            notificationShown = True
-
-            ' Hide TextBox1 when showing the notification
-            TextBox1.Visible = False
-
-            ' Set up blinking effect
-            blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
-            AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
-            blinkingTimer.Start()
-        End If
-    End Sub
-
-    Private Sub ShowNegativeNotification()
-        ' Display the negative notification if it's not already shown
-        If Not notificationShown Then
-            Dim negativeNotificationForm As New negativenotification1()
-            negativeNotificationForm.TopLevel = False
-            notifpanel.Controls.Add(negativeNotificationForm)
-
-            negativeNotificationForm.Show()
-            notificationShown = True
-
-            ' Hide TextBox1 when showing the notification
-            TextBox1.Visible = False
-
-            ' Set up blinking effect
-            blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
-            AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
-            blinkingTimer.Start()
-        End If
-    End Sub
-
-    Private Sub BlinkNotification(sender As Object, e As EventArgs)
-        ' Toggle the visibility of the notification form
-        For Each control In notifpanel.Controls
-            If TypeOf control Is notification Then
-                control.Visible = Not control.Visible
-            End If
-        Next
-    End Sub
-
-    Private Sub HideNotification()
-        ' Only hide the notification if it's currently shown
-        If notificationShown Then
-            ' Stop the blinking timer
-            blinkingTimer.Stop()
-
-            ' Assuming your notification forms have a Close method to hide them
-            For Each control In notifpanel.Controls
-                If TypeOf control Is Form Then
-                    Dim currentForm As Form = DirectCast(control, Form)
-
-                    ' Check the type of the form and close it accordingly
-                    If TypeOf currentForm Is notification Then
-                        DirectCast(currentForm, notification).Close()
-                    ElseIf TypeOf currentForm Is negativenotification1 Then
-                        DirectCast(currentForm, negativenotification1).Close()
-                    End If
-                End If
-            Next
-
-            notificationShown = False
-
-            ' Show TextBox1 when hiding the notification
-            TextBox1.Visible = True
-        End If
-    End Sub
 
 
     Private Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
@@ -279,17 +251,7 @@ Public Class dashboardform
         End If
     End Sub
 
-    Private Sub datagridview1_CellContentClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellContentClick
 
-    End Sub
-
-    Private Sub device_TextChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub notifpanel_Paint(sender As Object, e As PaintEventArgs)
-
-    End Sub
 
 
     'SA BATTERY NA CODE NI
@@ -312,6 +274,10 @@ Public Class dashboardform
     End Sub
 
     Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
+
+    End Sub
+
+    Private Sub SolidGauge1_ChildChanged_2(sender As Object, e As Integration.ChildChangedEventArgs) Handles SolidGauge1.ChildChanged
 
     End Sub
 End Class
