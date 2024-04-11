@@ -200,7 +200,7 @@ Partial Class Form1
         '
         'SolidGauge1
         '
-        Me.SolidGauge1.Location = New System.Drawing.Point(56, 39)
+        Me.SolidGauge1.Location = New System.Drawing.Point(57, 50)
         Me.SolidGauge1.Name = "SolidGauge1"
         Me.SolidGauge1.Size = New System.Drawing.Size(97, 60)
         Me.SolidGauge1.TabIndex = 3

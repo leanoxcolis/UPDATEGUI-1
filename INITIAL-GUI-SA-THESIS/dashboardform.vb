@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Drawing.Text
 Imports Guna.UI2.WinForms
 Imports MySql.Data.MySqlClient
 
@@ -14,68 +15,18 @@ Public Class dashboardform
         SolidGauge1.Uses360Mode = False
         SolidGauge1.From = 0
         SolidGauge1.To = 200
-        SolidGauge1.Value = GetCurrentPercentage()
+
 
     End Sub
 
+
+
+
+
+
+
+
     Private blinkingTimer As New Timer()
-
-    Public Function GetCurrentPercentage() As Integer
-        Dim milliLiter As Integer = 0
-        Try
-            Connect()
-            Dim query As String = "SELECT milliLiter FROM ultrasonic_data WHERE datetime = NOW() ORDER BY datetime "
-            command = New MySqlCommand(query, conn)
-            Dim reader = command.ExecuteReader()
-
-            'While reader.Read()
-            '    query = "SELECT milliLiter FROM ultrasonic_data WHERE datetime = NOW() ORDER BY datetime "
-            '    milliLiter = Convert.ToInt32(reader("milliLiter"))
-            'End While
-
-            If milliLiter >= 150 Then
-                ' MilliLiters exceeds 150, show positive notification form in notifpanel
-                Dim notificationForm As New notification()
-                notificationForm.TopLevel = False
-                notificationForm.AutoScroll = True
-                notifpanel.Controls.Clear()
-                notifpanel.Controls.Add(notificationForm)
-                notificationForm.Show()
-                notifpanel.Visible = True
-                StartBlinking()
-            ElseIf milliLiter < 0 Then
-                ' MilliLiters is negative, show negative notification form in notifpanel
-                Dim negativeNotificationForm As New negativenotification1()
-                negativeNotificationForm.TopLevel = False
-                negativeNotificationForm.AutoScroll = True
-                notifpanel.Controls.Clear()
-                notifpanel.Controls.Add(negativeNotificationForm)
-                negativeNotificationForm.Show()
-                notifpanel.Visible = True
-                StartBlinking()
-            Else
-                ' milliLiter is between 0 and 149, show noalert form in notifpanel
-                Dim noAlertForm As New noalert()
-                noAlertForm.TopLevel = False
-                noAlertForm.AutoScroll = True
-                notifpanel.Controls.Clear()
-                notifpanel.Controls.Add(noAlertForm)
-                noAlertForm.Show()
-                notifpanel.Visible = True
-                'StopBlinking() ' Stop blinking when no alert is displayed
-            End If
-
-
-        Catch ex As Exception
-            MessageBox.Show("Error: " & ex.Message)
-        Finally
-            conn.Close()
-        End Try
-
-        Return milliLiter
-
-    End Function
-
     Private Sub StartBlinking()
         blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
         AddHandler blinkingTimer.Tick, AddressOf BlinkNotification
@@ -102,7 +53,7 @@ Public Class dashboardform
         timer.Interval = 2000 ' 2000 milliseconds (2 seconds)
         timer.Start()
         Gauge360Example()
-        GetCurrentPercentage()
+
         AddHandler timer.Tick, AddressOf Gauge360Example
 
 
@@ -221,8 +172,7 @@ Public Class dashboardform
 
 
 
-    Private Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
-
+    Public Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
         Dim mlValueFromTable1 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data")
         Dim mlValueFromTable2 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data1")
         Dim mlValueFromTable3 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data2")
@@ -240,6 +190,37 @@ Public Class dashboardform
             If milliLiterCellValue IsNot Nothing AndAlso Integer.TryParse(milliLiterCellValue.ToString(), milliLiterValue) Then
                 ' The value is not null, and it can be successfully parsed as an Integer
                 ' Do something with milliLiterValue if needed
+                If milliLiterValue >= 150 Then
+                    ' MilliLiters exceeds 150, show positive notification form in notifpanel
+                    Dim notificationForm As New notification()
+                    notificationForm.TopLevel = False
+                    notificationForm.AutoScroll = True
+                    notifpanel.Controls.Clear()
+                    notifpanel.Controls.Add(notificationForm)
+                    notificationForm.Show()
+                    notifpanel.Visible = True
+                    StartBlinking()
+                ElseIf milliLiterValue < 0 Then
+                    ' MilliLiters is negative, show negative notification form in notifpanel
+                    Dim negativeNotificationForm As New negativenotification1()
+                    negativeNotificationForm.TopLevel = False
+                    negativeNotificationForm.AutoScroll = True
+                    notifpanel.Controls.Clear()
+                    notifpanel.Controls.Add(negativeNotificationForm)
+                    negativeNotificationForm.Show()
+                    notifpanel.Visible = True
+                    StartBlinking()
+                Else
+                    ' milliLiter is between 0 and 149, show noalert form in notifpanel
+                    Dim noAlertForm As New noalert()
+                    noAlertForm.TopLevel = False
+                    noAlertForm.AutoScroll = True
+                    notifpanel.Controls.Clear()
+                    notifpanel.Controls.Add(noAlertForm)
+                    noAlertForm.Show()
+                    notifpanel.Visible = True
+                    'StopBlinking() ' Stop blinking when no alert is displayed
+                End If
             Else
                 ' Handle the case where the value is null or cannot be parsed as an Integer
                 ' You might want to display an error message or take appropriate action
@@ -250,6 +231,7 @@ Public Class dashboardform
             SolidGauge1.Value = milliLiterValue ' Assuming SolidGauge1 is a control with a 'Value' property
         End If
     End Sub
+
 
 
 
@@ -278,6 +260,14 @@ Public Class dashboardform
     End Sub
 
     Private Sub SolidGauge1_ChildChanged_2(sender As Object, e As Integration.ChildChangedEventArgs) Handles SolidGauge1.ChildChanged
+
+    End Sub
+
+    Private Sub device_TextChanged(sender As Object, e As EventArgs) Handles device.TextChanged
+
+    End Sub
+
+    Private Sub Guna2Panel2_Paint(sender As Object, e As PaintEventArgs) Handles Guna2Panel2.Paint
 
     End Sub
 End Class
