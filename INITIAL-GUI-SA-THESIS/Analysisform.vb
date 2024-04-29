@@ -90,14 +90,41 @@ Public Class Analysisform
 
     Private Sub Analysis_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitializeUI()
+        UpdateProductTotal()
+    End Sub
 
-        'TOTAL SA MILLILITER SA TANAN TABLENAME
-        Connector.Connect()
+    Private Sub InitializeUI()
+        ' Add items to the ComboBox
+        ComboBox5.Items.Add("Tree-01")
+        ComboBox5.Items.Add("Tree-02")
+        ComboBox5.Items.Add("Tree-03")
 
-        Dim tableNames As String() = {"ultrasonic_data1"}
-        Dim totalMilliLiters As Double = 0
+        ComboBox5.SelectedIndex = 0
+    End Sub
 
-        For Each tableName As String In tableNames
+    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox5.SelectedIndexChanged
+        UpdateProductTotal()
+    End Sub
+
+    Private Sub UpdateProductTotal()
+        Dim selectedTree As String = ComboBox5.SelectedItem.ToString().ToLower()
+        Dim tableName As String = ""
+
+        ' Determine the table name based on the selected item
+        Select Case selectedTree
+            Case "tree-01"
+                tableName = "ultrasonic_data1"
+            Case "tree-02"
+                tableName = "ultrasonic_data2"
+            Case "tree-03"
+                tableName = "ultrasonic_data3"
+        End Select
+
+        ' If a valid table name is determined, calculate the total milliliters
+        If tableName <> "" Then
+            Cart(tableName)
+            cartesianChart1.Show()
+            Connector.Connect()
             Dim queryTotalMilliLiter As String = $"SELECT SUM(milliLiter) AS TotalMilliLiter FROM {tableName}"
             Dim cmdTotalMilliLiter As New MySqlCommand(queryTotalMilliLiter, Connector.conn)
 
@@ -105,55 +132,16 @@ Public Class Analysisform
                 Dim totalMilliLiter As Object = cmdTotalMilliLiter.ExecuteScalar()
 
                 If totalMilliLiter IsNot DBNull.Value Then
-                    totalMilliLiters += Convert.ToDouble(totalMilliLiter)
+                    producetxtbox.Text = totalMilliLiter.ToString()
+                Else
+                    producetxtbox.Text = "0" ' Set to 0 if no data found
                 End If
             Catch ex As Exception
                 MessageBox.Show("Error: " & ex.Message)
             End Try
-        Next
-
-        producetxtbox.Text = totalMilliLiters.ToString()
+        End If
     End Sub
 
-    Private Sub InitializeUI()
-        ' Add items to the ComboBox
-        'ComboBox5.Items.Add("TREE-01")
-        ComboBox5.Items.Add("TREE-01")
-        'ComboBox5.Items.Add("TREE-03")
-
-
-        ComboBox5.SelectedIndex = 0
-
-        UpdateChart()
-    End Sub
-
-    Private Sub PopulateComboBox()
-
-        'ComboBox5.Items.Add("TREE-01")
-        ComboBox5.Items.Add("TREE-01")
-        'ComboBox5.Items.Add("TREE-03")
-
-        ComboBox5.SelectedIndex = 0
-    End Sub
-
-    Private Sub ComboBox5_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ComboBox5.SelectedIndexChanged
-        UpdateChart()
-    End Sub
-
-    Private Sub UpdateChart()
-
-        cartesianChart1.Hide()
-
-        ' selectedItem is not used, so you can remove this line
-        ' selectedItem = ComboBox5.SelectedItem.ToString()
-
-        ' Use only ultrasonic_data1
-        Dim tableName As String = "ultrasonic_data1"
-        Cart(tableName)
-
-        cartesianChart1.Show()
-
-    End Sub
 
     Private Sub cartesianChart1_DataClick(sender As Object, chartPoint As ChartPoint) Handles cartesianChart1.DataClick
 
