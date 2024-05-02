@@ -10,6 +10,19 @@ Public Class Analysisform
 
 
     Private selectedItem As String = ""
+
+    Private WithEvents dataRefreshTimer As New Timer()
+
+    Public Sub New()
+        InitializeComponent()
+
+        ' Set the interval for the timer (refresh every 5 seconds)
+        dataRefreshTimer.Interval = 5000
+    End Sub
+
+    Private Sub dataRefreshTimer_Tick(sender As Object, e As EventArgs) Handles dataRefreshTimer.Tick
+        UpdateProductTotal()
+    End Sub
     Public Sub Cart(tableName As String)
         ' Call the Connect method to establish a database connection
         Connector.Connect()
@@ -91,6 +104,7 @@ Public Class Analysisform
     Private Sub Analysis_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitializeUI()
         UpdateProductTotal()
+        dataRefreshTimer.Start()
     End Sub
 
     Private Sub InitializeUI()

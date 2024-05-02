@@ -26,6 +26,7 @@ Partial Class dashboardform
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(dashboardform))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.datagridview1 = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -245,12 +246,11 @@ Partial Class dashboardform
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Century Gothic", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(104, 17)
+        Me.Label2.Location = New System.Drawing.Point(93, 17)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(108, 27)
         Me.Label2.TabIndex = 7
         Me.Label2.Text = "Milliliters"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'SolidGauge1
         '
@@ -266,6 +266,8 @@ Partial Class dashboardform
         '
         Me.Guna2Panel2.Anchor = System.Windows.Forms.AnchorStyles.None
         Me.Guna2Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
+        Me.Guna2Panel2.BackgroundImage = CType(resources.GetObject("Guna2Panel2.BackgroundImage"), System.Drawing.Image)
+        Me.Guna2Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Guna2Panel2.Controls.Add(Me.device)
         Me.Guna2Panel2.Controls.Add(Me.Label4)
         Me.Guna2Panel2.Location = New System.Drawing.Point(21, 35)
@@ -279,13 +281,13 @@ Partial Class dashboardform
         Me.device.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
         Me.device.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.device.Font = New System.Drawing.Font("Century Gothic", 28.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.device.Location = New System.Drawing.Point(0, 99)
+        Me.device.Location = New System.Drawing.Point(0, 173)
         Me.device.Margin = New System.Windows.Forms.Padding(4)
         Me.device.Multiline = True
         Me.device.Name = "device"
         Me.device.ReadOnly = True
-        Me.device.Size = New System.Drawing.Size(282, 132)
-        Me.device.TabIndex = 8
+        Me.device.Size = New System.Drawing.Size(282, 58)
+        Me.device.TabIndex = 0
         Me.device.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label4

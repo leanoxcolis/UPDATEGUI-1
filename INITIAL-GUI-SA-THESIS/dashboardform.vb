@@ -20,12 +20,6 @@ Public Class dashboardform
     End Sub
 
 
-
-
-
-
-
-
     Private blinkingTimer As New Timer()
     Private Sub StartBlinking()
         blinkingTimer.Interval = 500 ' Set the blinking interval (milliseconds)
@@ -86,8 +80,8 @@ Public Class dashboardform
         Connector.Connect()
 
         Dim query1 As String = "SELECT * FROM ultrasonic_data"
-        Dim query2 As String = "SELECT * FROM ultrasonic_data1"
-        Dim query3 As String = "SELECT * FROM ultrasonic_data2"
+        'Dim query2 As String = "SELECT * FROM ultrasonic_data1"
+        'Dim query3 As String = "SELECT * FROM ultrasonic_data2"
 
         Dim cmd1 As New MySqlCommand(query1, Connector.conn)
         Dim adapter1 As New MySqlDataAdapter(cmd1)
@@ -97,15 +91,15 @@ Public Class dashboardform
         'Dim adapter2 As New MySqlDataAdapter(cmd2)
         'Dim dataTable2 As New DataTable()
 
-        Dim cmd3 As New MySqlCommand(query3, Connector.conn)
-        Dim adapter3 As New MySqlDataAdapter(cmd3)
+        'Dim cmd3 As New MySqlCommand(query3, Connector.conn)
+        'Dim adapter3 As New MySqlDataAdapter(cmd3)
         Dim dataTable3 As New DataTable()
 
         Try
             ' Fill the DataTables with data from the queries
             adapter1.Fill(dataTable1)
             'adapter2.Fill(dataTable2)
-            adapter3.Fill(dataTable3)
+            'adapter3.Fill(dataTable3)
         Catch ex As Exception
 
         End Try
