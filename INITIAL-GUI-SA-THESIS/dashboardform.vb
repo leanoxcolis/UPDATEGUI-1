@@ -11,6 +11,7 @@ Public Class dashboardform
     Dim anglePerStep As Single = 360 / totalSteps
     Dim lastProgress As Integer = 0 ' Variable to store the last progress
 
+
     Public Sub Gauge360Example()
         SolidGauge1.Uses360Mode = False
         SolidGauge1.From = 0
@@ -42,31 +43,29 @@ Public Class dashboardform
     End Sub
 
     Private Sub dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
         RefreshDataGridView()
         Dim timer As New Timer()
-        timer.Interval = 2000 ' 2000 milliseconds (2 seconds)
+        timer.Interval = 500                'GA REFRESH SIYAG DATA EVERY SECONDS 
         timer.Start()
         Gauge360Example()
 
         AddHandler timer.Tick, AddressOf Gauge360Example
 
-
-        ''BATTERY
+        'BATTERY
         Guna2CircleProgressBar1.Maximum = TotalDurationSeconds
         Timer1.Interval = 1000 ' Set the timer interval to 1000 milliseconds (1 second)
         Guna2CircleProgressBar1.Value = TotalDurationSeconds ' Start from the maximum value
         Label6.Text = "100%"
         Timer1.Start()
 
-
-
+        ' Setup the refresh timer
         Dim refreshTimer As New Timer()
-        refreshTimer.Interval = 2000
-        ' AddHandler refreshTimer.Tick, AddressOf RefreshData
+        refreshTimer.Interval = 1000
+        AddHandler refreshTimer.Tick, AddressOf RefreshData
         refreshTimer.Start()
-
-
     End Sub
+
 
     Private Sub RefreshData(sender As Object, e As EventArgs)
         ' Refresh the data in the DataGridView
@@ -80,40 +79,23 @@ Public Class dashboardform
         Connector.Connect()
 
         Dim query1 As String = "SELECT * FROM ultrasonic_data"
-        'Dim query2 As String = "SELECT * FROM ultrasonic_data1"
-        'Dim query3 As String = "SELECT * FROM ultrasonic_data2"
 
         Dim cmd1 As New MySqlCommand(query1, Connector.conn)
         Dim adapter1 As New MySqlDataAdapter(cmd1)
         Dim dataTable1 As New DataTable()
 
-        'Dim cmd2 As New MySqlCommand(query2, Connector.conn)
-        'Dim adapter2 As New MySqlDataAdapter(cmd2)
-        'Dim dataTable2 As New DataTable()
-
-        'Dim cmd3 As New MySqlCommand(query3, Connector.conn)
-        'Dim adapter3 As New MySqlDataAdapter(cmd3)
-        Dim dataTable3 As New DataTable()
-
         Try
-            ' Fill the DataTables with data from the queries
+            ' Fill the DataTable with data from the query
             adapter1.Fill(dataTable1)
-            'adapter2.Fill(dataTable2)
-            'adapter3.Fill(dataTable3)
         Catch ex As Exception
-
+            ' Handle exception
         End Try
 
-        ' Merge the two DataTables into one
-        Dim mergedTable As New DataTable()
-        mergedTable.Merge(dataTable1)
-        'mergedTable.Merge(dataTable2)
-        mergedTable.Merge(dataTable3)
-
-        ' Bind the merged DataTable to the DataGridView
-        datagridview1.DataSource = mergedTable
+        ' Bind the DataTable to the DataGridView
+        datagridview1.DataSource = dataTable1
 
     End Sub
+
 
     Private Function GetMilliliterValueFromDatabase(tableName As String) As Integer
         Dim mlValue As Integer = 0
@@ -135,41 +117,9 @@ Public Class dashboardform
         Return mlValue
     End Function
 
-    Private Sub Guna2DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs)
-
-    End Sub
-
-    Private Sub TextBox3_TextChanged(sender As Object, e As EventArgs)
-
-    End Sub
-
-    Private Sub SolidGauge1_ChildChanged(sender As Object, e As Integration.ChildChangedEventArgs)
-
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs)
-        'SolidGauge1.Value = 50
-    End Sub
-
-    Private Sub ElementHost1_ChildChanged(sender As Object, e As Integration.ChildChangedEventArgs)
-
-    End Sub
-
-    Private Sub Panel2_Paint(sender As Object, e As PaintEventArgs)
-
-    End Sub
-
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs)
-
-    End Sub
-
-
-
 
     Public Sub datagridview1_CellClick_1(sender As Object, e As DataGridViewCellEventArgs) Handles datagridview1.CellClick
         Dim mlValueFromTable1 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data")
-        Dim mlValueFromTable2 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data1")
-        Dim mlValueFromTable3 As Integer = GetMilliliterValueFromDatabase("ultrasonic_data2")
 
         If e.RowIndex >= 0 Then ' Ensure a valid row is clicked
             Dim selectedRow As DataGridViewRow = datagridview1.Rows(e.RowIndex)
@@ -223,11 +173,9 @@ Public Class dashboardform
             device.Text = deviceValue
             datestarted.Text = datetimeValue
             SolidGauge1.Value = milliLiterValue ' Assuming SolidGauge1 is a control with a 'Value' property
+
         End If
     End Sub
-
-
-
 
 
     'SA BATTERY NA CODE NI
@@ -245,23 +193,4 @@ Public Class dashboardform
         End If
     End Sub
 
-    Private Sub SolidGauge1_ChildChanged_1(sender As Object, e As Integration.ChildChangedEventArgs)
-
-    End Sub
-
-    Private Sub Timer2_Tick(sender As Object, e As EventArgs) Handles Timer2.Tick
-
-    End Sub
-
-    Private Sub SolidGauge1_ChildChanged_2(sender As Object, e As Integration.ChildChangedEventArgs) Handles SolidGauge1.ChildChanged
-
-    End Sub
-
-    Private Sub device_TextChanged(sender As Object, e As EventArgs) Handles device.TextChanged
-
-    End Sub
-
-    Private Sub Guna2Panel2_Paint(sender As Object, e As PaintEventArgs) Handles Guna2Panel2.Paint
-
-    End Sub
 End Class

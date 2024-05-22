@@ -52,6 +52,9 @@ Partial Class dashboardform
         Me.datestarted = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
+        Me.alert_tree1 = New System.Windows.Forms.TextBox()
+        Me.alert_tree2 = New System.Windows.Forms.TextBox()
+        Me.alert_tree3 = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         CType(Me.datagridview1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Guna2Panel4.SuspendLayout()
@@ -68,7 +71,7 @@ Partial Class dashboardform
         Me.Panel1.Controls.Add(Me.datagridview1)
         Me.Panel1.Location = New System.Drawing.Point(40, 337)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(795, 417)
+        Me.Panel1.Size = New System.Drawing.Size(692, 417)
         Me.Panel1.TabIndex = 6
         '
         'datagridview1
@@ -108,7 +111,7 @@ Partial Class dashboardform
         Me.datagridview1.RowHeadersVisible = False
         Me.datagridview1.RowHeadersWidth = 51
         Me.datagridview1.RowTemplate.Height = 24
-        Me.datagridview1.Size = New System.Drawing.Size(789, 411)
+        Me.datagridview1.Size = New System.Drawing.Size(686, 411)
         Me.datagridview1.TabIndex = 4
         Me.datagridview1.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.datagridview1.ThemeStyle.AlternatingRowsStyle.Font = Nothing
@@ -338,8 +341,26 @@ Partial Class dashboardform
         Me.Label5.TabIndex = 4
         Me.Label5.Text = "Date Started "
         '
-        'Timer2
+        'alert_tree1
         '
+        Me.alert_tree1.Location = New System.Drawing.Point(751, 384)
+        Me.alert_tree1.Name = "alert_tree1"
+        Me.alert_tree1.Size = New System.Drawing.Size(27, 27)
+        Me.alert_tree1.TabIndex = 22
+        '
+        'alert_tree2
+        '
+        Me.alert_tree2.Location = New System.Drawing.Point(751, 417)
+        Me.alert_tree2.Name = "alert_tree2"
+        Me.alert_tree2.Size = New System.Drawing.Size(27, 27)
+        Me.alert_tree2.TabIndex = 23
+        '
+        'alert_tree3
+        '
+        Me.alert_tree3.Location = New System.Drawing.Point(751, 450)
+        Me.alert_tree3.Name = "alert_tree3"
+        Me.alert_tree3.Size = New System.Drawing.Size(27, 27)
+        Me.alert_tree3.TabIndex = 24
         '
         'dashboardform
         '
@@ -348,6 +369,9 @@ Partial Class dashboardform
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1229, 784)
+        Me.Controls.Add(Me.alert_tree3)
+        Me.Controls.Add(Me.alert_tree2)
+        Me.Controls.Add(Me.alert_tree1)
         Me.Controls.Add(Me.Guna2Panel4)
         Me.Controls.Add(Me.Guna2Panel3)
         Me.Controls.Add(Me.notifpanel)
@@ -372,6 +396,7 @@ Partial Class dashboardform
         Me.Guna2Panel1.ResumeLayout(False)
         Me.Guna2Panel1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents Panel1 As Panel
@@ -399,4 +424,7 @@ Partial Class dashboardform
     Friend WithEvents datestarted As TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents Timer2 As Timer
+    Friend WithEvents alert_tree1 As TextBox
+    Friend WithEvents alert_tree2 As TextBox
+    Friend WithEvents alert_tree3 As TextBox
 End Class
