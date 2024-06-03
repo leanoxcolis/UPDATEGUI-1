@@ -87,7 +87,7 @@ Public Class Form1
             Case "dashboard"
                 addForm(dashboardform)
             Case "settings"
-                addForm(settingsform)
+                'addForm(settingsform)
         End Select
     End Sub
 

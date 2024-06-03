@@ -64,7 +64,7 @@ Partial Class Form1
         Me.datetime.ForeColor = System.Drawing.Color.White
         Me.datetime.Location = New System.Drawing.Point(21, 27)
         Me.datetime.Name = "datetime"
-        Me.datetime.Size = New System.Drawing.Size(170, 27)
+        Me.datetime.Size = New System.Drawing.Size(142, 23)
         Me.datetime.TabIndex = 3
         Me.datetime.Text = "date and time"
         '
@@ -188,6 +188,7 @@ Partial Class Form1
         'paneldashboard
         '
         Me.paneldashboard.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
+        Me.paneldashboard.BackgroundImage = CType(resources.GetObject("paneldashboard.BackgroundImage"), System.Drawing.Image)
         Me.paneldashboard.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.paneldashboard.Controls.Add(Me.SolidGauge1)
         Me.paneldashboard.Controls.Add(Me.Label1)
@@ -200,6 +201,7 @@ Partial Class Form1
         '
         'SolidGauge1
         '
+        Me.SolidGauge1.BackColor = System.Drawing.Color.Transparent
         Me.SolidGauge1.Location = New System.Drawing.Point(57, 50)
         Me.SolidGauge1.Name = "SolidGauge1"
         Me.SolidGauge1.Size = New System.Drawing.Size(97, 60)
@@ -216,7 +218,7 @@ Partial Class Form1
         Me.Label1.ForeColor = System.Drawing.Color.WhiteSmoke
         Me.Label1.Location = New System.Drawing.Point(228, 350)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(755, 106)
+        Me.Label1.Size = New System.Drawing.Size(627, 86)
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Natural Later Rubber Monitoring System" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "       with Yield Data Visualization"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -226,7 +228,7 @@ Partial Class Form1
         '
         'Form1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 20.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 17.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(57, Byte), Integer), CType(CType(62, Byte), Integer), CType(CType(70, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1549, 865)

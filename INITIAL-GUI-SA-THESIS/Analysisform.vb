@@ -23,12 +23,14 @@ Public Class Analysisform
     Private Sub dataRefreshTimer_Tick(sender As Object, e As EventArgs) Handles dataRefreshTimer.Tick
         UpdateProductTotal()
     End Sub
-    Public Sub Cart(tableName As String)
+
+    Private isDataClickHandlerAttached As Boolean = False
+    Public Sub Cart(tableName As String, treeTitle As String)
         ' Call the Connect method to establish a database connection
         Connector.Connect()
 
         ' SQL query to retrieve data from the database
-        Dim query As String = $"SELECT datetime, milliLiter FROM {tableName}"
+        Dim query As String = String.Format("SELECT datetime, milliLiter FROM {0}", tableName)
 
         ' Create lists to store the data
         Dim datetimes As New List(Of DateTime)()
@@ -41,11 +43,13 @@ Public Class Analysisform
 
             Connector.reader = Connector.command.ExecuteReader()
 
-            While Connector.reader.Read()
-                ' Extract data
-                datetimes.Add(Connector.reader.GetDateTime("datetime"))
-                milliLiters.Add(Connector.reader.GetDouble("milliLiter"))
-            End While
+            If Connector.reader.HasRows Then
+                While Connector.reader.Read()
+                    ' Extract data
+                    datetimes.Add(Connector.reader.GetDateTime(Connector.reader.GetOrdinal("datetime")))
+                    milliLiters.Add(Connector.reader.GetDouble(Connector.reader.GetOrdinal("milliLiter")))
+                End While
+            End If
 
         Catch ex As Exception
             MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -63,11 +67,11 @@ Public Class Analysisform
 
         ' Bind the data to the chart
         cartesianChart1.Series.Add(New LineSeries() With {
-            .Title = selectedItem,
-            .Values = New ChartValues(Of Double)(milliLiters),
-            .PointGeometry = DefaultGeometries.Square,
-            .PointGeometrySize = 15
-        })
+        .Title = treeTitle, ' Use the dynamic tree title
+        .Values = New ChartValues(Of Double)(milliLiters),
+        .PointGeometry = DefaultGeometries.Square,
+        .PointGeometrySize = 15
+    })
 
         ' Configure the chart axes and appearance
         cartesianChart1.AxisX.Clear()
@@ -93,8 +97,10 @@ Public Class Analysisform
 
         cartesianChart1.LegendLocation = LegendLocation.Right
 
-        ' Handle data clicks as before
-        AddHandler cartesianChart1.DataClick, AddressOf CartesianChart1OnDataClick
+        If Not isDataClickHandlerAttached Then
+            AddHandler cartesianChart1.DataClick, AddressOf CartesianChart1OnDataClick
+            isDataClickHandlerAttached = True
+        End If
     End Sub
 
     Private Sub CartesianChart1OnDataClick(sender As Object, chartPoint As ChartPoint)
@@ -123,6 +129,7 @@ Public Class Analysisform
     Private Sub UpdateProductTotal()
         Dim selectedTree As String = ComboBox5.SelectedItem.ToString().ToLower()
         Dim tableName As String = ""
+        Dim treeTitle As String = ComboBox5.SelectedItem.ToString()
 
         ' Determine the table name based on the selected item
         Select Case selectedTree
@@ -136,7 +143,7 @@ Public Class Analysisform
 
         ' If a valid table name is determined, calculate the total milliliters
         If tableName <> "" Then
-            Cart(tableName)
+            Cart(tableName, treeTitle) ' Pass the selected tree title to the Cart method
             cartesianChart1.Show()
             Connector.Connect()
             Dim queryTotalMilliLiter As String = $"SELECT SUM(milliLiter) AS TotalMilliLiter FROM {tableName}"
@@ -155,6 +162,7 @@ Public Class Analysisform
             End Try
         End If
     End Sub
+
 
 
     Private Sub cartesianChart1_DataClick(sender As Object, chartPoint As ChartPoint) Handles cartesianChart1.DataClick

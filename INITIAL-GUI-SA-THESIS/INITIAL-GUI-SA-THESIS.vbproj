@@ -210,18 +210,6 @@
     <Compile Include="overview.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="settingsform.Designer.vb">
-      <DependentUpon>settingsform.vb</DependentUpon>
-    </Compile>
-    <Compile Include="settingsform.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="trydashboard.Designer.vb">
-      <DependentUpon>trydashboard.vb</DependentUpon>
-    </Compile>
-    <Compile Include="trydashboard.vb">
-      <SubType>Form</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Analysisform.resx">
@@ -254,12 +242,6 @@
     <EmbeddedResource Include="overview.resx">
       <DependentUpon>overview.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="settingsform.resx">
-      <DependentUpon>settingsform.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="trydashboard.resx">
-      <DependentUpon>trydashboard.vb</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">
@@ -277,5 +259,6 @@
   <ItemGroup>
     <Content Include="icons8-minimize-30.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
