@@ -23,7 +23,6 @@ Partial Class Analysisform
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Analysisform))
         Me.cartesianChart1 = New LiveCharts.WinForms.CartesianChart()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -105,9 +104,8 @@ Partial Class Analysisform
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
-        Me.BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), System.Drawing.Image)
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.ClientSize = New System.Drawing.Size(1043, 798)
+        Me.ClientSize = New System.Drawing.Size(1043, 788)
         Me.Controls.Add(Me.ComboBox5)
         Me.Controls.Add(Me.Guna2Panel2)
         Me.Controls.Add(Me.cartesianChart1)
