@@ -28,16 +28,9 @@ Partial Class dashboardform
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.datagridview1 = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.MySqlDataAdapter1 = New MySql.Data.MySqlClient.MySqlDataAdapter()
-        Me.Guna2Panel4 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Guna2CircleProgressBar1 = New Guna.UI2.WinForms.Guna2CircleProgressBar()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.Guna2Panel3 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.SolidGauge1 = New LiveCharts.WinForms.SolidGauge()
-        Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.datestarted = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
         Me.SolidGauge2 = New LiveCharts.WinForms.SolidGauge()
         Me.SolidGauge3 = New LiveCharts.WinForms.SolidGauge()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
@@ -63,10 +56,7 @@ Partial Class dashboardform
         Me.Guna2Elipse11 = New Guna.UI2.WinForms.Guna2Elipse(Me.components)
         Me.Panel1 = New System.Windows.Forms.Panel()
         CType(Me.datagridview1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Guna2Panel4.SuspendLayout()
-        Me.Guna2CircleProgressBar1.SuspendLayout()
         Me.Guna2Panel3.SuspendLayout()
-        Me.Guna2Panel1.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel5.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -141,57 +131,6 @@ Partial Class dashboardform
         Me.MySqlDataAdapter1.SelectCommand = Nothing
         Me.MySqlDataAdapter1.UpdateCommand = Nothing
         '
-        'Guna2Panel4
-        '
-        Me.Guna2Panel4.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Guna2Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
-        Me.Guna2Panel4.Controls.Add(Me.Label3)
-        Me.Guna2Panel4.Controls.Add(Me.Guna2CircleProgressBar1)
-        Me.Guna2Panel4.Location = New System.Drawing.Point(595, 271)
-        Me.Guna2Panel4.Name = "Guna2Panel4"
-        Me.Guna2Panel4.Size = New System.Drawing.Size(287, 235)
-        Me.Guna2Panel4.TabIndex = 21
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Century Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(102, 17)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(82, 25)
-        Me.Label3.TabIndex = 5
-        Me.Label3.Text = "Battery"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopCenter
-        '
-        'Guna2CircleProgressBar1
-        '
-        Me.Guna2CircleProgressBar1.Controls.Add(Me.Label6)
-        Me.Guna2CircleProgressBar1.FillColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(218, Byte), Integer), CType(CType(223, Byte), Integer))
-        Me.Guna2CircleProgressBar1.Font = New System.Drawing.Font("Segoe UI", 12.0!)
-        Me.Guna2CircleProgressBar1.ForeColor = System.Drawing.Color.White
-        Me.Guna2CircleProgressBar1.Location = New System.Drawing.Point(62, 45)
-        Me.Guna2CircleProgressBar1.Minimum = 0
-        Me.Guna2CircleProgressBar1.Name = "Guna2CircleProgressBar1"
-        Me.Guna2CircleProgressBar1.ProgressColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(173, Byte), Integer), CType(CType(181, Byte), Integer))
-        Me.Guna2CircleProgressBar1.ProgressColor2 = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(173, Byte), Integer), CType(CType(181, Byte), Integer))
-        Me.Guna2CircleProgressBar1.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle
-        Me.Guna2CircleProgressBar1.Size = New System.Drawing.Size(166, 166)
-        Me.Guna2CircleProgressBar1.TabIndex = 4
-        Me.Guna2CircleProgressBar1.Text = "Guna2CircleProgressBar1"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Font = New System.Drawing.Font("Century Gothic", 16.2!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(66, 71)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(36, 26)
-        Me.Label6.TabIndex = 0
-        Me.Label6.Text = "00"
-        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'Guna2Panel3
         '
         Me.Guna2Panel3.Anchor = System.Windows.Forms.AnchorStyles.None
@@ -210,7 +149,7 @@ Partial Class dashboardform
         Me.Label2.Font = New System.Drawing.Font("Century Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.Location = New System.Drawing.Point(105, 17)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(73, 25)
+        Me.Label2.Size = New System.Drawing.Size(92, 32)
         Me.Label2.TabIndex = 7
         Me.Label2.Text = "TREE 1"
         '
@@ -223,43 +162,6 @@ Partial Class dashboardform
         Me.SolidGauge1.Size = New System.Drawing.Size(252, 172)
         Me.SolidGauge1.TabIndex = 6
         Me.SolidGauge1.Text = "SolidGauge1"
-        '
-        'Guna2Panel1
-        '
-        Me.Guna2Panel1.Anchor = System.Windows.Forms.AnchorStyles.None
-        Me.Guna2Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
-        Me.Guna2Panel1.Controls.Add(Me.datestarted)
-        Me.Guna2Panel1.Controls.Add(Me.Label5)
-        Me.Guna2Panel1.Location = New System.Drawing.Point(624, 551)
-        Me.Guna2Panel1.Name = "Guna2Panel1"
-        Me.Guna2Panel1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Guna2Panel1.Size = New System.Drawing.Size(282, 235)
-        Me.Guna2Panel1.TabIndex = 18
-        '
-        'datestarted
-        '
-        Me.datestarted.BackColor = System.Drawing.Color.FromArgb(CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(238, Byte), Integer))
-        Me.datestarted.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.datestarted.Font = New System.Drawing.Font("Century Gothic", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.datestarted.Location = New System.Drawing.Point(0, 99)
-        Me.datestarted.Margin = New System.Windows.Forms.Padding(4)
-        Me.datestarted.Multiline = True
-        Me.datestarted.Name = "datestarted"
-        Me.datestarted.ReadOnly = True
-        Me.datestarted.Size = New System.Drawing.Size(282, 132)
-        Me.datestarted.TabIndex = 8
-        Me.datestarted.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Century Gothic", 13.8!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(63, 17)
-        Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(130, 23)
-        Me.Label5.TabIndex = 4
-        Me.Label5.Text = "Date Started "
         '
         'SolidGauge2
         '
@@ -301,7 +203,7 @@ Partial Class dashboardform
         Me.Label1.Font = New System.Drawing.Font("Century Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(116, 17)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(73, 25)
+        Me.Label1.Size = New System.Drawing.Size(92, 32)
         Me.Label1.TabIndex = 7
         Me.Label1.Text = "TREE 2"
         '
@@ -323,7 +225,7 @@ Partial Class dashboardform
         Me.Label4.Font = New System.Drawing.Font("Century Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.Location = New System.Drawing.Point(112, 17)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(73, 25)
+        Me.Label4.Size = New System.Drawing.Size(92, 32)
         Me.Label4.TabIndex = 7
         Me.Label4.Text = "TREE 3"
         '
@@ -362,7 +264,7 @@ Partial Class dashboardform
         Me.Label7.Font = New System.Drawing.Font("Century Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(70, 17)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(158, 25)
+        Me.Label7.Size = New System.Drawing.Size(200, 32)
         Me.Label7.TabIndex = 8
         Me.Label7.Text = "NOTIFICATION"
         '
@@ -396,7 +298,6 @@ Partial Class dashboardform
         'Guna2Elipse5
         '
         Me.Guna2Elipse5.BorderRadius = 30
-        Me.Guna2Elipse5.TargetControl = Me.Guna2Panel4
         '
         'Guna2Elipse6
         '
@@ -406,7 +307,6 @@ Partial Class dashboardform
         'Guna2Elipse7
         '
         Me.Guna2Elipse7.BorderRadius = 30
-        Me.Guna2Elipse7.TargetControl = Me.Guna2Panel1
         '
         'Guna2Elipse8
         '
@@ -416,12 +316,10 @@ Partial Class dashboardform
         'Guna2Elipse9
         '
         Me.Guna2Elipse9.BorderRadius = 30
-        Me.Guna2Elipse9.TargetControl = Me.Guna2Panel4
         '
         'Guna2Elipse11
         '
         Me.Guna2Elipse11.BorderRadius = 30
-        Me.Guna2Elipse11.TargetControl = Me.Guna2Panel4
         '
         'Panel1
         '
@@ -435,17 +333,15 @@ Partial Class dashboardform
         '
         'dashboardform
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 17.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(61, Byte), Integer), CType(CType(61, Byte), Integer))
         Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1229, 749)
-        Me.Controls.Add(Me.Guna2Panel4)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Guna2Panel5)
         Me.Controls.Add(Me.Guna2Panel2)
         Me.Controls.Add(Me.Guna2Panel3)
-        Me.Controls.Add(Me.Guna2Panel1)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
@@ -453,14 +349,8 @@ Partial Class dashboardform
         Me.Name = "dashboardform"
         Me.Text = "dashboard"
         CType(Me.datagridview1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Guna2Panel4.ResumeLayout(False)
-        Me.Guna2Panel4.PerformLayout()
-        Me.Guna2CircleProgressBar1.ResumeLayout(False)
-        Me.Guna2CircleProgressBar1.PerformLayout()
         Me.Guna2Panel3.ResumeLayout(False)
         Me.Guna2Panel3.PerformLayout()
-        Me.Guna2Panel1.ResumeLayout(False)
-        Me.Guna2Panel1.PerformLayout()
         Me.Guna2Panel2.ResumeLayout(False)
         Me.Guna2Panel2.PerformLayout()
         Me.Guna2Panel5.ResumeLayout(False)
@@ -473,16 +363,9 @@ Partial Class dashboardform
     End Sub
     Friend WithEvents datagridview1 As Guna.UI2.WinForms.Guna2DataGridView
     Friend WithEvents MySqlDataAdapter1 As MySql.Data.MySqlClient.MySqlDataAdapter
-    Friend WithEvents Guna2Panel4 As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Guna2CircleProgressBar1 As Guna.UI2.WinForms.Guna2CircleProgressBar
-    Friend WithEvents Label6 As Label
     Friend WithEvents Guna2Panel3 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Label2 As Label
     Friend WithEvents SolidGauge1 As LiveCharts.WinForms.SolidGauge
-    Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents datestarted As TextBox
-    Friend WithEvents Label5 As Label
     Friend WithEvents SolidGauge2 As LiveCharts.WinForms.SolidGauge
     Friend WithEvents SolidGauge3 As LiveCharts.WinForms.SolidGauge
     Friend WithEvents Guna2Panel2 As Guna.UI2.WinForms.Guna2Panel

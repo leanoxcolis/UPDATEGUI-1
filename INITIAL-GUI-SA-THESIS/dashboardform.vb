@@ -38,11 +38,7 @@ Public Class dashboardform
     Private Sub dashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'BATTERY
-        Guna2CircleProgressBar1.Maximum = TotalDurationSeconds
-        ProgressBar.Interval = 1000 ' Set the timer interval to 1000 milliseconds (1 second)
-        Guna2CircleProgressBar1.Value = TotalDurationSeconds ' Start from the maximum value
-        Label6.Text = "100%"
-        ProgressBar.Start()
+
 
         '---------------------------------------------------------------------------------------------
 
@@ -91,14 +87,14 @@ Public Class dashboardform
                 Dim device As String = reader("device").ToString()
                 Dim milliLiter As Integer = Convert.ToInt32(reader("milliLiter"))
 
-                If milliLiter >= 150 Then
+                If milliLiter >= 160 Then
                     ' Set the message in notificationtxt
                     millilitertxt.ForeColor = Color.Red
-                    millilitertxt.Text += $"- The latex is 150 mL for the {device}." & Environment.NewLine
+                    millilitertxt.Text += $"- The latex is 160 mL for the {device}." & Environment.NewLine
                     blinkTimer.Start()
                 Else
                     ' Clear the message for the device if milliLiter is less than 150 mL
-                    millilitertxt.Text = millilitertxt.Text.Replace($"The latex is 150 mL for the {device}." & Environment.NewLine, "")
+                    millilitertxt.Text = millilitertxt.Text.Replace($"The latex is 160 mL for the {device}." & Environment.NewLine, "")
                     'blinkTimer.Stop()
                     'millilitertxt.ForeColor = SystemColors.ControlText
                 End If
@@ -183,23 +179,7 @@ Public Class dashboardform
     End Function
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles ProgressBar.Tick
-        If Guna2CircleProgressBar1.Value > 0 Then
-            Guna2CircleProgressBar1.Value -= 1
-            ' Example: Update the label text with the percentage as a whole number
-            Label6.Text = $"{CInt((Guna2CircleProgressBar1.Value / Guna2CircleProgressBar1.Maximum) * 100)}%"
 
-            ' Check if progress reaches 20%
-            If Guna2CircleProgressBar1.Value / Guna2CircleProgressBar1.Maximum = 0.2 Then
-                notificationtxt.ForeColor = Color.Red
-                notificationtxt.Text = "Battery in 20%, you need to charge"
-            End If
-        Else
-            ' Example: Stop the timer when the progress reaches 0
-            ProgressBar.Stop()
-
-            ' Store the last progress value
-            lastProgress = Guna2CircleProgressBar1.Value
-        End If
     End Sub
 
     Private Sub blinkTimer_Tick(sender As Object, e As EventArgs) Handles blinkTimer.Tick
@@ -208,5 +188,9 @@ Public Class dashboardform
         Else
             millilitertxt.ForeColor = Color.Red
         End If
+    End Sub
+
+    Private Sub millilitertxt_TextChanged(sender As Object, e As EventArgs) Handles millilitertxt.TextChanged
+
     End Sub
 End Class
